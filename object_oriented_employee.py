@@ -1,5 +1,8 @@
 class Employee:
 
+    employees = {}                   ##put dictionary inside class, so it's easier to access all the details.
+                                     ##if it was outside, you can't access without 'returns'
+
     def __init__(self):
         self.firstname = ""
         self.lastname = ""
@@ -10,27 +13,31 @@ class Employee:
         self.graduate = None
         self.id = None
 
+    def read_id(self):
+        while True:
+            self.id = input("Please Enter Employee ID: ")
+            self.id = self.id.strip()
+            if (self.id.isdigit() > 0) and (self.id not in Employee.employees.keys()):
+                self.id = int(self.id)
+                break
+            else:
+                print("Enter another valid Employee ID:")
+
     def read_first_name(self):
         while True:
             self.firstname = input(f"Please Enter The First Name: ")
             if len(self.firstname.strip()) > 1:
-                return self.firstname
+                break
             else:
                 print("Name must be a minimum of 2 characters")
-
-    def print_first_name(self):
-        print(self.firstname.capitalize().strip())
 
     def read_last_name(self):
         while True:
             self.lastname = input(f"Please Enter The Last Name: ")
             if len(self.lastname.strip()) > 1:
-                return self.lastname
+                break
             else:
                 print("Name must be a minimum of 2 characters")
-
-    def print_last_name(self):
-        print(self.lastname.capitalize().strip())
 
     def read_birth_day(self):
         while True:
@@ -39,15 +46,11 @@ class Employee:
             if self.birthday.strip():
                 self.birthday = int(self.birthday)
                 if (self.birthday >= 1) and (self.birthday <= 31):
-                    return self.birthday
+                    break
                 else:
                     print("Employee Birth Day must be between 1 and 31")
             else:
                 print("Employee Birth Day must contain only digits")
-
-    def print_birth_day(self):
-        print(self.birthday)
-
 
     def read_birth_month(self):
         while True:
@@ -56,14 +59,11 @@ class Employee:
             if self.birthmonth.isdigit():
                 self.birthmonth = int(self.birthmonth)
                 if (self.birthmonth >= 1) and (self.birthmonth <= 12):
-                    return self.birthmonth
+                    break
                 else:
                     print("Employee Birth Month must be between 1 and 12")
             else:
                 print("Employee Birth Month must contain only digits")
-
-    def print_birth_month(self):
-        print(self.birthmonth)
 
     def read_birth_year(self):
         while True:
@@ -72,26 +72,20 @@ class Employee:
             if self.birthyear.isdigit():
                 self.birthyear = int(self.birthyear)
                 if (self.birthyear >= 1900) and (self.birthyear <= 2004):
-                    return self.birthyear
+                    break
                 else:
                     print("Employee Birth Year must be between 1900 and 2004")
             else:
                 print("Employee Birth Year must contain only digits")
-
-    def print_birth_year(self):
-        print(self.birthyear)
 
     def read_position(self):
         while True:
             self.position = input("Please Enter The Employee Position:")
             if len(self.position.strip()) > 0:
                 self.position = str(self.position)
-                return self.position
+                break
             else:
                 print("WARNING: Enter Valid Employee Position")
-
-    def print_position(self):
-        print(self.position)
 
     def read_graduate(self):
         valid_choices = ["Y", "y", "N", "n"]
@@ -99,47 +93,134 @@ class Employee:
             self.graduate = input("Has the Employee Graduated? Type 'y' for Yes or 'n' for No: ")
             if self.graduate in valid_choices:
                 if self.graduate.lower() == "y":
-                    return True
-                return False
+                    self.graduate = True
+                self.graduate = False
+                break
             else:
                 print("Please Type 'y' or 'n'")
 
-    def print_graduate(self):
-        print(self.graduate)
 
-    def read_id(self):
+    def print_all_data(self):
+        print(f"Employee ID: {self.id}")
+        print(f"Employee First Name: {self.firstname.capitalize().strip()}")
+        print(f"Employee Last Name: {self.lastname.capitalize().strip()}")
+        print(f"Employee Birth Date: {self.birthday}/{self.birthmonth}/{self.birthyear}")
+        print(f"Employee Position: {self.position.capitalize().strip()}")
+        print(f"Employee is a Graduate: {self.graduate}")
+
+    def add_employee(self):
+        self.read_id()
+        self.read_first_name()
+        self.read_last_name()
+        self.read_birth_day()
+        self.read_birth_month()
+        self.read_birth_year()
+        self.read_position()
+        self.read_graduate()
+
+    @staticmethod       ##Static when you make a method that isn't involving the class (i.e. not going to use Self)
+    def read_options():
+        valid_options = ["a", "r", "t", "l", "ret", "u", "e"]
         while True:
-            self.id = input("Please Enter Employee ID: ")
-            self.id = self.id.strip()
-            if (self.id.isdigit()) > 0:
-                self.id = int(self.id)
-                return self.id
+            options_str = input("Please select an option: \n'a' to Add Employee \n'r' to Remove Employee"
+                                "\n't' to Check Total No. of Employees \n'l' to see a list of the Employee(s)' details"
+                                "\n'ret' to Retrieve an Employee's Data \n'u' to Update an Employee Data \n'e' to Exit: ")
+            options_str = options_str.strip()
+            if options_str in valid_options:
+                return options_str
             else:
-                print("Enter valid Employee ID:")
+                print("Please Enter a Valid Option:  a | r | t | l | ret | u | e  ")
 
-    def print_id(self):
-        print(self.id)
+    @staticmethod
+    def remove_employee():
+        while True:
+            removeid_str = input("Please Enter the Employee ID that you want to remove: ")
+            if removeid_str.isdigit():
+                removeid = int(removeid_str)
+                return removeid
+            else:
+                print("Enter valid Employee ID: ")
+
+    @staticmethod
+    def retrieve_details():
+        while True:
+            retreiveid_str = input("Please Enter the ID of the Employee's details you wish to Retrieve: ")
+            if retreiveid_str.isdigit():
+                retrieveid = int(retreiveid_str)
+                return retrieveid
+            else:
+                print("Enter valid Employee ID: ")
+
+    @staticmethod
+    def update_details():
+        while True:
+            update_details_str = input("Please Enter the ID of the Employee's details you wish to update: ")
+            if update_details_str.isdigit():
+                update_details = int(update_details_str)
+                return update_details
 
 
 if __name__ == "__main__":
 
-    employee1 = Employee()
 
-    employee1.read_first_name()
-    employee1.print_first_name()
-    employee1.read_last_name()
-    employee1.print_last_name()
-    employee1.read_birth_day()
-    employee1.print_birth_day()
-    employee1.read_birth_month()
-    employee1.print_birth_month()
-    employee1.read_birth_year()
-    employee1.print_birth_year()
-    employee1.read_position()
-    employee1.print_position()
-    employee1.read_graduate()
-    employee1.print_graduate()
-    employee1.read_id()
-    employee1.print_id()
+    while True:
+        options = Employee.read_options()     ##access the 'read_options' static method
 
-    print(employee1)
+        if options.lower() == "a":
+            employee = Employee()
+            employee.add_employee()
+            Employee.employees[employee.id] = employee ##Employee. is to access the class    ##.employees is to access dictionary
+                                                       ##employee.id is to be able to access details via id
+                                                       ##=employee is the variable that stores this particular employee's details
+            employee.print_all_data()
+
+        elif options.lower() == "r":
+            remove_id = Employee.remove_employee()
+            del Employee.employees[remove_id]
+            print(f"Employee with id {remove_id} is removed")
+            print(Employee.employees)
+
+        elif options.lower() == "t":
+            total_employees = len(Employee.employees.keys()) ##returns a 'list' of all the keys (IDs) & len counts the no. of keys of dictionary
+            print(f"The Total No. of Employees in the system are {total_employees}")
+
+        elif options.lower() == "l":
+            list_of_employees = list(Employee.employees.values()) ##values are all the employees' details
+            for employee in list_of_employees:
+                employee.print_all_data()
+
+        elif options.lower() == "ret":
+            retrieveID = Employee.retrieve_details()
+            Employee.employees[retrieveID].print_all_data()
+
+        elif options.lower() == "u":
+            change_details = Employee.update_details()   ##variable to access ID
+            employee = Employee.employees[change_details]
+            valid_inputs = ["firstname", "lastname", "birthday", "birthmonth", "birthyear", "position", "graduate"]
+            while True:
+                update = input("What details would you like to update? Choose from following: "
+                           "\nfirstname \nlastname \nbirthday \nbirthmonth \nbirthyear \nposition \ngraduate ")
+                if update in valid_inputs:
+                    break
+                else:
+                    print("Please type the detail exactly as shown: ")
+            mod = input("What would you like to modify this detail to? ")
+
+            if update == "firstname":
+                employee.first_name = mod
+            elif update == "lastname":
+                employee.last_name = mod
+            elif update == "birthday":
+                employee.birth_day = mod
+            elif update == "birthmonth":
+                employee.read_birth_month = mod
+            elif update == "birthyear":
+                employee.read_birth_year = mod
+            elif update == "position":
+                employee.read_position = mod
+            elif update == "graduate":
+                employee.read_graduate = mod
+            employee.print_all_data()
+
+        else:
+            break
